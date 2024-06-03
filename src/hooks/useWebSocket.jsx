@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
-const useWebSocket = (url) => {
+const useWebSocket = () => {
   const [socketData, setSocketData] = useState(null);
 
-  const WS_SERVER = `ws://localhost:9999/`;
+  const HOST = location.hostname;
+  const WS_SERVER = `ws://${HOST}:9999/`;
 
   useEffect(() => {
     const ws = new WebSocket(WS_SERVER);
@@ -28,7 +29,7 @@ const useWebSocket = (url) => {
     return () => {
       ws.close();
     };
-  }, [url]);
+  }, []);
 
   return socketData;
 };
