@@ -5,12 +5,24 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
-import "./page.css";
+// import "./page.css";
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 // import { get } from "http";
 
-const serial: string[] = ["00M09A342600271", "00M09C431500177"];
+const serial: string[] = ["00M09A342600271",
+"00M09A342600260",
+"00M09C431500177",
+"00M09C431903549",
+"00M09C431903109",
+"00M09C411300736",
+"00M09C412401291",
+"00M09A381601473",
+"00M00A2C0603600",
+"00M09A381800295",
+"00M09A351803089",
+"00M09A381800295",
+"00M09C431501094"];
 
 class Printer {
   public id: string;
@@ -48,7 +60,7 @@ const update = (socketData:any, device:Printer, serialNum:string) => {
   device.currentTray = parseInt( JSON.stringify((socketData?.data?.ams?.ams[0]?.id), replacer, 2).replaceAll( '\"', '') );
   device.filName = identifyTray(socketData);
   device.filColor = "#".concat((JSON.stringify((socketData?.data?.ams?.ams[0].tray[device.currentTray - 1]?.tray_color), replacer, 2).replaceAll( '\"', '')));
-  device.error = JSON.stringify((socketData?.data?.ams?.print_error), replacer, 2).replaceAll( '\"', '');
+  device.error = JSON.stringify((socketData?.data?.print_error), replacer, 2).replaceAll( '\"', '');
   return device;
 };
 
@@ -87,14 +99,6 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
   );
 };
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'green',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 const replacer = (key:any, value:any) =>
   typeof value === 'undefined' ? null : value;
 
@@ -103,7 +107,7 @@ const getError = (code:string) => {
   const bigGuy = document.getElementById("money");
   if(code == "1" && elem != null && bigGuy != null){
     elem.setAttribute("style", "color:red; font-size:20px;");
-    bigGuy.setAttribute("style", "background-color:maroon;")
+    bigGuy.setAttribute("style", "background-color:maroon;");
     return "ERROR"
   }
   else if (code != "1" && elem != null){
@@ -118,13 +122,13 @@ const identifyTray = (socketData:any) => {
   switch(currentTray) {
   case '"0"':
       // console.log(JSON.stringify((socketData?.data?.ams.ams[0].tray[0].name)).replaceAll( '\"', ''));
-      return JSON.stringify((socketData?.data?.ams.ams[0].tray[0].name)).replaceAll( '\"', '');
+      return JSON.stringify((socketData?.data?.ams?.ams[0]?.tray[0]?.name), replacer, 2).replaceAll( '\"', '');
     case '"1"':
-      return JSON.stringify((socketData?.data?.ams.ams[0].tray[1].name)).replaceAll( '\"', '');
+      return JSON.stringify((socketData?.data?.ams?.ams[0]?.tray[1]?.name), replacer, 2).replaceAll( '\"', '');
     case '"2"':
-      return JSON.stringify((socketData?.data?.ams.ams[0].tray[2].name)).replaceAll( '\"', '');
+      return JSON.stringify((socketData?.data?.ams?.ams[0]?.tray[2]?.name), replacer, 2).replaceAll( '\"', '');
     case '"3"':
-      return JSON.stringify((socketData?.data?.ams.ams[0].tray[3].name)).replaceAll( '\"', '');
+      return JSON.stringify((socketData?.data?.ams?.ams[0]?.tray[3]?.name), replacer, 2).replaceAll( '\"', '');
     default:
       // console.log(currentTray);
       return "None";
@@ -137,15 +141,16 @@ export default function Home() {
   React.useEffect(() => {
     updatePrinterArray(socketData);
   },[socketData]);
-
+  console.log(socketData);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={{ xs: 20, sm:0,  md: 10 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Box>
+        <Grid>
           {Array.from(Array(1)).map((_, index) => (
-            <Grid  xs={2} sm={4} md={12} key={index}>
+            <Grid>
               {printerArray.map(printerArray => 
-                <Item id="money">
+                <div id={index.toString()} className={`main-${printerArray?.error}`}>
+
                   <p>{printerArray.name}</p>
                   <p>{printerArray.printJob}</p>
                   <p>Time Remaining: {printerArray.timeLeft}</p>
@@ -159,11 +164,11 @@ export default function Home() {
                   {/* <p style={{color:"#".concat((JSON.stringify((socketData?.data?.ams?.ams[0].tray[1].tray_color), replacer, 2).replaceAll( '\"', '')))}}>{(JSON.stringify((socketData?.data?.ams?.ams[0].tray[1].name), replacer, 2).replaceAll( '\"', ''))} </p> */}
                   {/* <p style={{color:"#".concat((JSON.stringify((socketData?.data?.ams?.ams[0].tray[2].tray_color), replacer, 2).replaceAll( '\"', '')))}}>{(JSON.stringify((socketData?.data?.ams?.ams[0].tray[2].name), replacer, 2).replaceAll( '\"', ''))} </p> */}
                   {/* <p style={{color:"#".concat((JSON.stringify((socketData?.data?.ams?.ams[0].tray[3].tray_color), replacer, 2).replaceAll( '\"', '')))}}>{(JSON.stringify((socketData?.data?.ams?.ams[0].tray[3].name), replacer, 2).replaceAll( '\"', ''))} </p> */}
-                  {/* <p id="1234" style={{fontSize: 200}}>Status: {getError("1")}</p> */}
-                  <p id="1234" >Status: {getError(printerArray.error)}</p> 
+                  <p>{printerArray?.error === '0' ? 'OK' : 'ERROR' }</p>
+                  {/* <p id="1234" >Status: {getError(printerArray.error)}</p>  */}
                   {/* <p>{(JSON.stringify((socketData?.data?.ams?.ams[0].tray[3].name), replacer, 2).replaceAll( '\"', ''))}</p> */}
                   <p>{printerArray.temp}</p>
-                </Item> 
+                </div> 
               )}
             </Grid>
           ))}

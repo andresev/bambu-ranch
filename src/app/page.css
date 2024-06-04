@@ -13,3 +13,11 @@ width: 1%;
 height: 30px;
 background-color: #04AA6D;
 }
+
+.error-1 {
+    background-color: red;
+}
+
+.error-0 {
+    background-color: #04AA6D;
+}

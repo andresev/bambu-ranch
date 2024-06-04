@@ -31,3 +31,16 @@ body {
     text-wrap: balance;
   }
 }
+
+.main {
+  color: white;
+  background-color: #04AA6D;
+}
+
+.main-0 {
+  background-color: red;
+}
+
+.main-1 {
+  background-color: #04AA6D;
+}
