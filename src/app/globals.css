@@ -3,17 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
@@ -32,15 +24,50 @@ body {
   }
 }
 
-.main {
-  color: white;
-  background-color: #04AA6D;
+.loadingBar {
+  * { background-color:3F88C5 !important; }
+  background-color:7aa3c5 !important;
 }
 
-.main-0 {
-  background-color: red;
+.p-24 {
+  padding:0;
 }
 
-.main-1 {
-  background-color: #04AA6D;
+.box{
+  background-color: #393E41;
+  border-color: #44BBA4;
+  border-radius: 20px;
+  border-width: 10px;
+  padding: 10px;
+}
+
+#main-1 {
+  border-color: #E94F37;
+}
+
+#main-117473284 {
+  border-color: #E94F37;
+}
+
+#main-50364419 {
+  border-color: #E94F37;
+}
+
+.title{
+  display: flex;
+  justify-content: center;
+  /* background-color: violet; */
+}
+
+.title p {
+  font-size: 25px;
+  /* background-color: blue; */
+}
+
+.time{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  height: fit-content;
+  /* background-color: red; */
 }
