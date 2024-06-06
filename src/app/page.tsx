@@ -8,6 +8,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import * as React from "react";
 import useWebSocket from "../hooks/useWebSocket";
 
+// Array of serial codes for all the printers
 const serials: string[] = [
   "00M09A342600260",
   "00M09A342600271", //2
@@ -23,6 +24,7 @@ const serials: string[] = [
   "00M09C431903549", //12
 ];
 
+// Printer class that represents on 3-d printer
 class Printer {
   public id: string;
   public name: string;
@@ -51,6 +53,10 @@ class Printer {
   }
 }
 
+// Array of printers
+var printerArray: Printer[] = [];
+
+// Updates printer with the given socketData
 const update = (socketData: any, device: Printer, serialNum: string) => {
   device = new Printer(serialNum);
   device.name = JSON.stringify(
@@ -106,8 +112,7 @@ const update = (socketData: any, device: Printer, serialNum: string) => {
   return device;
 };
 
-var printerArray: Printer[] = [];
-
+// Loops through the known seialrs and calls update() when the known serial# and socketData serial# match
 const updatePrinterArray = (socketData: any) => {
   for (let i = 0; i < serials.length; i++) {
     if (
@@ -121,6 +126,7 @@ const updatePrinterArray = (socketData: any) => {
   }
 };
 
+// Material UI progess bar with custom CSS
 function LinearProgressWithLabel(
   props: LinearProgressProps & { value: number; state: string }
 ) {
@@ -146,9 +152,11 @@ function LinearProgressWithLabel(
   );
 }
 
+// Replacer for JSON.stringify
 const replacer = (key: any, value: any) =>
   typeof value === "undefined" ? null : value;
 
+// Gets current tray and returns the name of the filament on the current tray
 const identifyTray = (socketData: any) => {
   const currentTray = JSON.stringify(socketData?.data?.ams?.tray_now);
   switch (currentTray) {
@@ -185,6 +193,8 @@ const identifyTray = (socketData: any) => {
 
 export default function Home() {
   const socketData = useWebSocket() as any;
+
+  //useEffect for whenever socketData changes to update the printerArray
   React.useEffect(() => {
     updatePrinterArray(socketData);
   }, [socketData]);
@@ -210,14 +220,20 @@ export default function Home() {
                   <p>
                     Status:{" "}
                     {printerArray?.error === "0"
-                      ? "No Errors"
+                      ? "OK"
                       : printerArray?.error === "117473284"
                         ? "Spagetti"
                         : "ERROR CODE: " + printerArray?.error}
                   </p>
                   <div className="time">
                     <p>Time Remaining:</p>
-                    <p style={{ fontSize: 20, paddingLeft: 4 }}>
+                    <p
+                      style={{
+                        fontSize: 20,
+                        paddingLeft: 4,
+                        fontWeight: "bold",
+                      }}
+                    >
                       {printerArray.timeLeft === "0"
                         ? "DONE!"
                         : printerArray.timeLeft}

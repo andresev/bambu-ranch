@@ -27,8 +27,10 @@ body {
 .loadingBar {
   * {
     background-color: #3f88c5 !important;
+    border-radius: 10px;
   }
   background-color: #8caac3 !important;
+  border-radius: 10px;
 }
 
 #hope-PAUSE {
@@ -94,6 +96,7 @@ body {
 
 .title p {
   font-size: 25px;
+  font-weight: bold;
   /* background-color: blue; */
 }
 
